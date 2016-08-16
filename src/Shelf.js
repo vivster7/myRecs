@@ -4,13 +4,13 @@ import { DropTarget } from 'react-dnd';
 import flow from 'lodash/flow';
 import Release from './Release';
 import { ItemTypes } from './Constants';
-import { addRelease, removeRelease } from './actions';
+import Button from './Button';
+import { moveRelease, removeShelf } from './actions';
 
 const shelfTarget = {
-  drop(props, monitor) {
-    console.log(props)
-    console.log(monitor.getItem())
-    addRelease(props.item, props.target)
+  drop(props, monitor, component) {
+    const { mergedProps } = component
+    mergedProps.dispatch(moveRelease(monitor.getItem(), props.shelf))
   }
 }
 
@@ -22,10 +22,14 @@ function collect(connect, monitor) {
 }
 
 class Shelf extends Component {
+  constructor(props) {
+    super(props);
+    this.handleRemoveShelf = this.handleRemoveShelf.bind(this);
+  }
 
-  renderRelease(release) {
-    const { key, title } = release;
-    return <Release key={key} title={title}/>
+  handleRemoveShelf() {
+    const { dispatch, shelf } = this.props;
+    dispatch(removeShelf(shelf.id))
   }
 
   renderOverlay(color) {
@@ -44,25 +48,16 @@ class Shelf extends Component {
   } 
 
   render() {
-    const { 
-      key, name, onShelf, releases,
-      connectDropTarget, isOver, 
-   } = this.props;
-
-    const releasesOnShelf = onShelf.map((t) =>
-      this.renderRelease(releases[t])
-    );
-
-    console.log(key);
-    console.log(name);
-
+    const { shelf, isOver, connectDropTarget } = this.props;
+    const { name, onShelf } = shelf;
 
     return connectDropTarget(
       <div style={{
         marginLeft: '7%',
         marginRight: '7%',
+        position: 'relative',
       }}>
-      <span>{name}</span>
+      <input value={name} />
         <div style={{
           width: '100%',
           height: '180px',
@@ -73,25 +68,28 @@ class Shelf extends Component {
           justifyContent: 'space-around',
           position: 'relative',
         }}>
-          {releasesOnShelf}
+          {this.props.children}
           {isOver && this.renderOverlay('yellow')}
         </div>
+      <Button action={this.handleRemoveShelf}
+              isCloseButton={true}
+      />
       </div>
     );
   }
 }
 
 Shelf.propTypes = {
-  key: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  onShelf: PropTypes.array.isRequired,
+  shelf: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+  }).isRequired,
   isOver: PropTypes.bool.isRequired,
+  dispatch: PropTypes.func.isRequired,
 }
 
 function mapStateToProps(state) {
-  window.s = state;
-  const { releases } = state;
-  return { releases }
+  return {};
 }
 
 export default flow(

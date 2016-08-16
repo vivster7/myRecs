@@ -3,20 +3,39 @@ import { connect } from 'react-redux';
 import { DragDropContext } from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import flow from 'lodash/flow';
+import Release from './Release';
 import Shelf from './Shelf';
-import { moveRelease } from './actions';
+import Button from './Button';
+import Trash from './Trash';
+import { addShelf } from './actions';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.handleAddShelf = this.handleAddShelf.bind(this);
+  }
 
-  // THIS IS MANAGING STATE!
-  // moveTitle(title, source, destination) {
-  //   const idx = 
-  // }
+  handleAddShelf(e) {
+    this.props.dispatch(addShelf());
+    e.preventDefault();
+  }
+
+  renderRelease(release) {
+    return <Release release={release} key={release.id} />;
+  }
 
   renderShelf(shelf) {
-    const { key, name, releases } = shelf;
-    console.log(shelf); 
-    return <Shelf key={key} name={name} onShelf={releases} />
+    const { releases } = this.props;
+    const releaseIds = Object.keys(releases).filter((id) => 
+      releases[id].shelf === shelf.id
+    )
+    
+    return (
+      <Shelf shelf={shelf} key={shelf.id}>
+        {releaseIds.map((id) => 
+          this.renderRelease(releases[id]))}
+      </Shelf>
+    );
   }
 
   render() {
@@ -28,9 +47,10 @@ class App extends Component {
     );
 
     return (
-      <div style={{
-      }}>
+      <div>
         {shelvesComponents}
+        <Button action={this.handleAddShelf} />
+        <Trash />
       </div>
     )
   }
@@ -42,8 +62,8 @@ App.propTypes = {
 
 function mapStateToProps(state) {
   window.s = state;
-  const { shelves } = state;
-  return { shelves }
+  const { shelves, releases } = state;
+  return { shelves, releases }
 }
 
 export default flow(

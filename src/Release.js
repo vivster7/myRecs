@@ -4,7 +4,7 @@ import { ItemTypes } from './Constants';
 
 const releaseSource = {
   beginDrag(props) {
-    return { key: props };
+    return { id: props.release.id};
   }
 }
 
@@ -17,9 +17,8 @@ function collect(connect, monitor) {
 
 export class Release extends Component {
   render() {
-    const { 
-      title, connectDragSource, isDragging
-     } = this.props;
+    const { release, connectDragSource, isDragging } = this.props;
+    const { title } = release;
 
     const titleStyle = {
       color: 'white',
@@ -52,8 +51,9 @@ export class Release extends Component {
 }
 
 Release.propTypes = {
-  key: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
+  release: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+  }).isRequired,
   // labels: PropTypes.array.isRequired,
   // formats: PropTypes.array.isRequired,
   // artists: PropTypes.array.isRequired,

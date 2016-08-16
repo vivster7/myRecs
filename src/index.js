@@ -7,28 +7,29 @@ import configureStore from './configureStore'
 const initialState = {
   shelves: {
     1:{
-      key: 1,
+      id: 1,
       name:'Indie',
-      releases:[1,3]
     },
     2:{
-      key: 2,
+      id: 2,
       name: 'Rock',
-      releases:[2]
     },
   },
   releases: {
     1: {
-      key: 1,
-      title:' Mumford and Sons'
+      id: 1,
+      title:' Mumford and Sons',
+      shelf: 1,
     },
     2: {
-      key: 2,
-      title: 'Coldplay'
+      id: 2,
+      title: 'Coldplay',
+      shelf: 2,
     },
     3: {
-      key: 3,
-      title: 'Hozier'
+      id: 3,
+      title: 'Hozier',
+      shelf: 1,
     }
   }
 };

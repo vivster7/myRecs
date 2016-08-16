@@ -1,17 +1,24 @@
-export const ADD_RELEASE = 'ADD_RELEASE';
-export function addRelease(release, shelf) {
+export const MOVE_RELEASE = 'MOVE_RELEASE';
+export function moveRelease(release, shelf) {
   return {
-    type: ADD_RELEASE,
+    type: MOVE_RELEASE,
     release,
     shelf
   };
 }
 
-export const REMOVE_RELEASE = 'REMOVE_RELEASE';
-export function removeRelease(release, shelf) {
+export const ADD_SHELF = 'ADD_SHELF';
+export const REMOVE_SHELF = 'REMOVE_SHELF';
+
+export function addShelf() {
   return {
-    type: REMOVE_RELEASE,
-    release,
-    shelf
-  }
+    type: ADD_SHELF
+  };
+}
+
+export function removeShelf(id) {
+  return {
+    type: REMOVE_SHELF,
+    id
+  };
 }
