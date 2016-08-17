@@ -1,17 +1,11 @@
-var webpack = require('webpack')
-var webpackDevMiddleware = require('webpack-dev-middleware')
-var webpackHotMiddleware = require('webpack-hot-middleware')
-var config = require('./webpack.config')
 var session = require('express-session')
 
-const Discogs = require('disconnect').Client
+var Discogs = require('disconnect').Client
 
-var app = new (require('express'))()
+var express = require('express');
+var app = express();
 var port = 3000
 
-var compiler = webpack(config)
-app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }))
-app.use(webpackHotMiddleware(compiler))
 
 app.use(session({
   secret: 'keyboard cat',
@@ -22,9 +16,9 @@ app.use(session({
 app.get('/authorize', function(req, res){
     var oAuth = new Discogs().oauth();
     oAuth.getRequestToken(
-        'QUDvTUcqPbvcwtRgkzSM', 
-        'jSSHgpNsbCrQbWaaPThPsHjZNRqHcDfp', 
-        'http://localhost:3000/callback', 
+        `${process.env.CONSUMER_KEY}`, 
+        `${process.env.CONSUMER_SECRET}`, 
+        `${process.env.DOMAIN}/callback`, 
         function(err, requestData){
             req.session.requestData = requestData
             res.redirect(requestData.authorizeUrl);
@@ -43,6 +37,8 @@ app.get('/callback', function(req, res){
         }
     );
 });
+
+app.use(express.static('public'));
 
 app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html')
