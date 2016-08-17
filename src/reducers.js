@@ -1,9 +1,12 @@
 import { combineReducers } from 'redux';
 import merge from 'lodash/merge';
 import omit from 'lodash/omit';
+import findKey from 'lodash/findKey';
 import { ADD_SHELF, REMOVE_SHELF } from './actions';
 
-function shelves(state = {}, action) {
+function shelves(state = {
+    1: {id:1, name:'Shelf1'}
+  }, action) {
   switch(action.type) {
     case ADD_SHELF:
       const nextId = Object.keys(state).length !== 0
@@ -23,10 +26,27 @@ function shelves(state = {}, action) {
 }
 
 function releases(state = {}, action) {
-  if (action.release && action.shelf) {
+
+  // JSON parsing
+  if (action.json) {
+    const { json } = action;
+
+    return Object.assign({}, state, 
+      json.releases.map((x) => {
+        return {
+          'id': x['basic_information']['id'],
+          'title': x['basic_information']['title'],
+          'shelf': 1
+        }
+      }));
+  }
+
+  // Move release
+  else if (action.release && action.shelf) {
     const { release } = action
+    const key = findKey(state, (x) => x.id === release.id)
     return merge({}, state, {
-      [release.id]: {
+      [key]: {
         shelf: action.shelf.id
       }
     });

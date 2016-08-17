@@ -30,7 +30,7 @@ class Trash extends Component {
     return connectDropTarget(
       <div style={{
         fontSize: '500%',
-        position: 'absolute',
+        position: 'fixed',
         bottom: '0px',
         right: '0px',
         opacity: canDrop ? 1 : 0.5,

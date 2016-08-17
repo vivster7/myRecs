@@ -14,7 +14,7 @@ export default class Button extends Component {
           border: 'hidden',
           color: 'white',
           position: 'absolute',
-          top: isCloseButton ? '65px' : '50px',
+          top: isCloseButton ? '65px' : '70px',
           right: isCloseButton ? '-20px' : '',
           transform: isCloseButton ? 'rotate(45deg)' : 'rotate(0deg)',
           background: isCloseButton ? 'red' : 'green',

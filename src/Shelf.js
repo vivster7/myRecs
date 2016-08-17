@@ -55,9 +55,12 @@ class Shelf extends Component {
       <div style={{
         marginLeft: '7%',
         marginRight: '7%',
+        marginBottom: '3%',
         position: 'relative',
       }}>
-      <input value={name} />
+      <span><b>Shelf Name: </b>
+        <input defaultValue={name} />
+      </span>
         <div style={{
           width: '100%',
           height: '180px',

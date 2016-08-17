@@ -5,14 +5,23 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import flow from 'lodash/flow';
 import Release from './Release';
 import Shelf from './Shelf';
+import Header from './Header';
 import Button from './Button';
 import Trash from './Trash';
-import { addShelf } from './actions';
+import { addShelf, fetchRecords } from './actions';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.handleAddShelf = this.handleAddShelf.bind(this);
+  }
+
+  componentWillMount() {
+    this.props.dispatch(fetchRecords());
+  }
+
+  handleFetchRecords(e) {
+    e.preventDefault();
   }
 
   handleAddShelf(e) {
@@ -40,14 +49,23 @@ class App extends Component {
 
   render() {
 
-    const { shelves } = this.props;
+    const { shelves, releases } = this.props;
 
     const shelvesComponents = Object.keys(shelves).map((shelf) =>
       this.renderShelf(shelves[shelf])
     );
 
+    if (Object.keys(releases).length === 0) {
+      return (
+        <Header>
+          <div>Loading Records for user...</div>
+        </Header>
+      );
+    }
+
     return (
-      <div>
+      <div style={{fontFamily: 'sans-serif'}}>
+        <Header />
         {shelvesComponents}
         <Button action={this.handleAddShelf} />
         <Trash />
@@ -61,7 +79,6 @@ App.propTypes = {
 };
 
 function mapStateToProps(state) {
-  window.s = state;
   const { shelves, releases } = state;
   return { shelves, releases }
 }
