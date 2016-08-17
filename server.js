@@ -4,7 +4,6 @@ var webpackHotMiddleware = require('webpack-hot-middleware')
 var config = require('./webpack.config')
 var session = require('express-session')
 
-
 const Discogs = require('disconnect').Client
 
 var app = new (require('express'))()
@@ -62,10 +61,6 @@ app.get('/records', function(req, res) {
 
   var dis = dis || new Discogs();
   var user = req.session.username || 'blacklight';
-  console.log('users:')
-  console.log(user);
-  console.log(req.session.username);
-  console.log('end');
 
   var col = dis.user().collection();
   col.getReleases(`${user}`, 0, {page: 1, per_page: 50}, function(err, data) {
@@ -73,10 +68,6 @@ app.get('/records', function(req, res) {
     res.json(data);
   });
 });
-
-// app.use(function(req, res) {
-//   res.sendFile(__dirname + '/index.html')
-// })
 
 app.listen(port, function(error) {
   if (error) {
